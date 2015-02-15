@@ -8,35 +8,18 @@
     <main>
       <div id="board"></div>
       <div class="sidebar">
-        <textarea name="game_input" rows="20" cols="20"></textarea>
+        <textarea id="game_input" rows="20" cols="20"></textarea>
       </div>
     </main>
 
     <footer>
       <li>
-        <ul>
-          <button onclick="c.next_generation()">Step</button>
-        </ul>
-
-        <ul>
-          <button onclick="c.auto()">Go</button>
-        </ul>
-
-        <ul>
-          <button onclick="c.naughto()">Stop</button>
-        </ul>
-
-        <ul>
-          <button onclick="c.randomize(0.3)">Random</button>
-        </ul>
-
-        <ul>
-          <button onclick="c.randomize(0)">Clear</button>
-        </ul>
-
-        <ul>
-          <button name="c.game_input()">Read Input</button>
-        </ul>
+        <ul><button onclick="c.next_generation()">Step</button></ul>
+        <ul><button onclick="c.auto()">Go</button></ul>
+        <ul><button onclick="c.naughto()">Stop</button></ul>
+        <ul><button onclick="c.randomize(0.3)">Random</button></ul>
+        <ul><button onclick="c.randomize(0)">Clear</button></ul>
+        <ul><button onclick="c.game_input()">Read Input</button></ul>
       </li>
     </footer>
   </body>

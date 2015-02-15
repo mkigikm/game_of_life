@@ -35,6 +35,31 @@ GameOfLifeController.prototype.naughto = function () {
   this.timer = null;
 };
 
+GameOfLifeController.prototype.game_input = function () {
+  var board = document.getElementById("game_input").value;
+  this.clear();
+
+  var lines = board.split("\n");
+
+  var row_offset = ~~((this.game.rows - lines.length) / 2);
+
+  var col_offset = lines[0].length;
+  for (var i = 0; i < lines.length; i++)
+    max_line_length = Math.max(col_offset, lines[i].length);
+  col_offset = ~~((this.game.cols - max_line_length) / 2);
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i];
+
+    for (var j = 0; j < line.length; j++) {
+      if (line[j] === "*")
+        this.game.grid[i + row_offset][j + col_offset] = 1;
+    }
+  }
+
+  this.view.update_display(this.game);
+};
+
 //html clicks
 GameOfLifeController.prototype.cell_click = function (row, col) {
   var value = (this.game.grid[row][col] + 1) % 2;
