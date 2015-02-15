@@ -1,7 +1,7 @@
 function GameOfLifeController (parent, game) {
   this.game = game;
   this.view = new GameOfLifeView(this, parent, game.rows, game.cols);
-  var timer = null;
+  this.timer = null;
 }
 
 //html buttons
@@ -13,8 +13,7 @@ GameOfLifeController.prototype.randomize = function (p) {
 };
 
 GameOfLifeController.prototype.clear = function () {
-  this.game.randomize(0);
-  this.view.update_display(this.game);
+  this.randomize(0);
 };
 
 GameOfLifeController.prototype.next_generation = function () {
@@ -43,10 +42,10 @@ GameOfLifeController.prototype.game_input = function () {
 
   var row_offset = ~~((this.game.rows - lines.length) / 2);
 
-  var col_offset = lines[0].length;
-  for (var i = 0; i < lines.length; i++)
-    max_line_length = Math.max(col_offset, lines[i].length);
-  col_offset = ~~((this.game.cols - max_line_length) / 2);
+  var max_columns = Math.max.apply(null,
+      lines.map(function (line) { return line.length;})
+    );
+  var col_offset = ~~((this.game.cols - max_columns) / 2);
 
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i];
