@@ -2,7 +2,41 @@
   <head>
     <title>Conway's Game of Divs</title>
     <style>
+      html, head, body, header,
+      nav, h1, a, ul, li, main,
+      section, p, footer, small {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font: inherit;
+        color: inherit;
+        text-align: inherit;
+        text-decoration: inherit;
+        vertical-align: inherit;
+        box-sizing: inherit;
+        background: transparent;
+      }
+
+      header, nav, main, section,
+      footer, small {
+        display: block;
+      }
+
+      ul {
+        list-style: none;
+      }
+
+      /* Clearfix */
+
+      .group:after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+
       main {
+        margin: 0 auto;
         width: 500px;
         height: 500px;
       }
@@ -14,12 +48,25 @@
         border: 1px solid black;
       }
 
-      .dead {
+      #board {
+        float: left;
+      }
+
+      .unvisited {
         background: white;
+      }
+
+      .dead {
+        background: lightblue;
       }
 
       .alive {
         background: green;
+      }
+
+      .sidebar {
+        float: left;
+        padding: 20px;
       }
     </style>
 
@@ -27,13 +74,19 @@
 
     </script>
   </head>
-  <body onload="script();">
+  <body onload="setup();">
     <main id="board">
     </main>
-    <button onclick="g.next_generation()">Step</button>
-    <button onclick="auto()">Go</button>
-    <button onclick="naughto()">Stop</button>
-    <button onclick="naughto(); g.randomize(0.3)">Random</button>
-    <button onclick="naughto(); g.randomize(0)">Clear</button>
+    <div class="sidebar">
+      <textarea name="game_input" rows="20" cols="20"></textarea>
+    </div>
+    <footer>
+      <button onclick="c.next_generation()">Step</button>
+      <button onclick="c.auto()">Go</button>
+      <button onclick="c.naughto()">Stop</button>
+      <button onclick="c.randomize(0.3)">Random</button>
+      <button onclick="c.randomize(0)">Clear</button>
+      <button name="c.game_input()"></button>
+    </footer>
   </body>
 </html>

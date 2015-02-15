@@ -1,36 +1,100 @@
-function Cell (parent, row, col, game) {
-  this.row = row;
-  this.col = col;
+function GameOfLifeController (parent, game) {
   this.game = game;
-
-  this.div = document.createElement("div");
-  parent.appendChild(this.div);
-
-  this.div.addEventListener("click", function(){ g.board[row][col].swap_state() });
-  this.update_display();
+  this.view = new GameOfLifeView(this, parent, game.rows, game.cols);
+  var timer = null;
 }
 
-Cell.prototype.swap_state = function () {
-  console.log(this.row);
-  console.log(this.col);
-  this.set_value((this.get_value() + 1) % 2);
-  this.update_display();
+//html buttons
+GameOfLifeController.prototype.randomize = function (p) {
+  this.naughto();
+  this.game.randomize(p);
+  this.view.reset_display();
+  this.view.update_display(this.game);
 };
 
-Cell.prototype.update_display = function () {
-  if (this.get_value() === 1) {
-    this.div.className = "alive";
-  } else {
-    this.div.className = "dead";
+GameOfLifeController.prototype.clear = function () {
+  this.game.randomize(0);
+  this.view.update_display(this.game);
+};
+
+GameOfLifeController.prototype.next_generation = function () {
+  this.game.next_generation();
+  this.view.update_display(this.game);
+};
+
+GameOfLifeController.prototype.auto = function () {
+  if (this.timer === null) {
+    this.next_generation();
+    var me = this;
+    this.timer = setInterval(function () { me.next_generation() }, 500);
   }
 };
 
-Cell.prototype.set_value = function(value) {
-  this.game.grid[this.row][this.col] = value;
+GameOfLifeController.prototype.naughto = function () {
+  clearInterval(this.timer);
+  this.timer = null;
 };
 
-Cell.prototype.get_value = function() {
-  return this.game.grid[this.row][this.col];
+//html clicks
+GameOfLifeController.prototype.cell_click = function (row, col) {
+  var value = (this.game.grid[row][col] + 1) % 2;
+
+  this.game.grid[row][col] = value;
+  this.view.cells[row][col].update_display(value);
+}
+
+function GameOfLifeView (controller, parent, rows, cols) {
+  this.rows = rows;
+  this.cols = cols;
+  this.cells = new Array(rows);
+
+  for (var i = 0; i < rows; i++) {
+    this.cells[i] = new Array(cols);
+
+    for (var j = 0; j < cols; j++)
+      this.cells[i][j] = new CellView(controller, parent, i, j);
+  }
+}
+
+GameOfLifeView.prototype.update_display = function (game) {
+  for (var i = 0; i < this.rows; i++) {
+    for (var j = 0; j < this.cols; j++) {
+      this.cells[i][j].update_display(game.grid[i][j]);
+    }
+  }
+};
+
+GameOfLifeView.prototype.reset_display = function () {
+  for (var i = 0; i < this.rows; i++) {
+    for (var j = 0; j < this.cols; j++) {
+      this.cells[i][j].reset_display();
+    }
+  }
+};
+
+function CellView (controller, parent, row, col) {
+  this.div = document.createElement("div");
+  this.reset_display();
+  parent.appendChild(this.div);
+
+  this.div.addEventListener("click",
+    function() {
+      controller.cell_click(row, col);
+    });
+};
+
+CellView.prototype.update_display = function (value) {
+  if (value === 1) {
+    this.div.className = "alive";
+  } else {
+    var current = this.div.className;
+
+    this.div.className = current === "unvisited" ? current : "dead";
+  }
+};
+
+CellView.prototype.reset_display = function () {
+  this.div.className = "unvisited";
 }
 
 function GameOfLife (rows, cols, underpop, overpop, birth) {
@@ -41,28 +105,19 @@ function GameOfLife (rows, cols, underpop, overpop, birth) {
   this.birth = birth;
 
   this.grid = new Array(rows);
-  this.board = new Array(rows);
-
-  var board_area = document.getElementById("board");
-
 
   for (var i = 0; i < rows; i++) {
     this.grid[i] = new Array(cols);
-    this.board[i] = new Array(rows);
 
-    for (var j = 0; j < cols; j++) {
+    for (var j = 0; j < cols; j++)
       this.grid[i][j] = 0;
-      this.board[i][j] = new Cell(board_area, i, j, this);
-    }
   }
 }
 
 GameOfLife.prototype.randomize = function (p) {
   for (var i = 0; i < this.rows; i++) {
-    for (var j = 0; j < this.cols; j++) {
+    for (var j = 0; j < this.cols; j++)
       this.grid[i][j] = p > Math.random() ? 1 : 0;
-      this.board[i][j].update_display();
-    }
   }
 };
 
@@ -107,8 +162,6 @@ GameOfLife.prototype.birth_next_generation = function () {
       } else {
         this.grid[i][j] = neighbors === this.birth ? 1 : 0;
       }
-
-      this.board[i][j].update_display();
     }
   }
 };
@@ -118,22 +171,9 @@ GameOfLife.prototype.next_generation = function () {
   this.birth_next_generation();
 };
 
-function script () {
-  g = new GameOfLife(50,50,2,3,3);
-  // g.randomize(0.3);
+function setup () {
+  var game = new GameOfLife(50,50,2,3,3);
+  c = new GameOfLifeController(document.getElementById("board"), game);
 }
 
-function auto() {
-  if (!timer) {
-    g.next_generation();
-    timer = setInterval(function () { g.next_generation() }, 500)
-  }
-}
-
-function naughto() {
-  clearInterval(timer);
-  timer = false;
-}
-
-var g;
-var timer = false;
+var c;
