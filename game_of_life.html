@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Conway's Game of Divs</title>
+    <style>
+      main {
+        width: 500px;
+        height: 500px;
+      }
+
+      div {
+        float: left;
+        width: 8px;
+        height: 8px;
+        border: 1px solid black;
+      }
+
+      .dead {
+        background: white;
+      }
+
+      .alive {
+        background: green;
+      }
+    </style>
+
+    <script type="text/javascript" src="game_of_life.js">
+
+    </script>
+  </head>
+  <body onload="script();">
+    <main id="board">
+    </main>
+    <button onclick="g.next_generation()">Step</button>
+    <button onclick="auto()">Go</button>
+    <button onclick="naughto()">Stop</button>
+    <button onclick="naughto(); g.randomize(0.3)">Random</button>
+    <button onclick="naughto(); g.randomize(0)">Clear</button>
+  </body>
+</html>
