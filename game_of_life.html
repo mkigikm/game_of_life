@@ -1,92 +1,43 @@
 <html>
   <head>
     <title>Conway's Game of Divs</title>
-    <style>
-      html, head, body, header,
-      nav, h1, a, ul, li, main,
-      section, p, footer, small {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        outline: 0;
-        font: inherit;
-        color: inherit;
-        text-align: inherit;
-        text-decoration: inherit;
-        vertical-align: inherit;
-        box-sizing: inherit;
-        background: transparent;
-      }
-
-      header, nav, main, section,
-      footer, small {
-        display: block;
-      }
-
-      ul {
-        list-style: none;
-      }
-
-      /* Clearfix */
-
-      .group:after {
-        content: "";
-        display: block;
-        clear: both;
-      }
-
-      main {
-        margin: 0 auto;
-        width: 500px;
-        height: 500px;
-      }
-
-      div {
-        float: left;
-        width: 8px;
-        height: 8px;
-        border: 1px solid black;
-      }
-
-      #board {
-        float: left;
-      }
-
-      .unvisited {
-        background: white;
-      }
-
-      .dead {
-        background: lightblue;
-      }
-
-      .alive {
-        background: green;
-      }
-
-      .sidebar {
-        float: left;
-        padding: 20px;
-      }
-    </style>
-
-    <script type="text/javascript" src="game_of_life.js">
-
-    </script>
+    <link rel="stylesheet" href="game_of_life.css" type="text/css">
+    <script type="text/javascript" src="game_of_life.js"></script>
   </head>
   <body onload="setup();">
-    <main id="board">
+    <main>
+      <div id="board"></div>
+      <div class="sidebar">
+        <textarea name="game_input" rows="20" cols="20"></textarea>
+      </div>
     </main>
-    <div class="sidebar">
-      <textarea name="game_input" rows="20" cols="20"></textarea>
-    </div>
+
     <footer>
-      <button onclick="c.next_generation()">Step</button>
-      <button onclick="c.auto()">Go</button>
-      <button onclick="c.naughto()">Stop</button>
-      <button onclick="c.randomize(0.3)">Random</button>
-      <button onclick="c.randomize(0)">Clear</button>
-      <button name="c.game_input()"></button>
+      <li>
+        <ul>
+          <button onclick="c.next_generation()">Step</button>
+        </ul>
+
+        <ul>
+          <button onclick="c.auto()">Go</button>
+        </ul>
+
+        <ul>
+          <button onclick="c.naughto()">Stop</button>
+        </ul>
+
+        <ul>
+          <button onclick="c.randomize(0.3)">Random</button>
+        </ul>
+
+        <ul>
+          <button onclick="c.randomize(0)">Clear</button>
+        </ul>
+
+        <ul>
+          <button name="c.game_input()">Read Input</button>
+        </ul>
+      </li>
     </footer>
   </body>
 </html>
