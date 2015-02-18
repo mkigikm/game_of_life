@@ -79,3 +79,19 @@ GameOfLife.prototype.nextGeneration = function () {
   this.countAllNeighbors();
   this.birthNextGeneration();
 };
+
+GameOfLife.prototype.getCellState = function (i, j) {
+  return this.grid[i][j];
+};
+
+GameOfLife.prototype.setCellAlive = function (i, j) {
+  this.grid[i][j] = 1;
+};
+
+GameOfLife.prototype.setCellDead = function (i, j) {
+  this.grid[i][j] = 0;
+};
+
+GameOfLife.prototype.flipCellState = function (i, j) {
+  return this.grid[i][j] = (this.grid[i][j] + 1) % 2;
+};

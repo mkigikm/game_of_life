@@ -6,30 +6,31 @@ function GameOfLifeView (controller, parent, rows, cols) {
   for (var i = 0; i < rows; i++) {
     this.cells[i] = new Array(cols);
 
-    for (var j = 0; j < cols; j++)
+    for (var j = 0; j < cols; j++) {
       this.cells[i][j] = new CellView(controller, parent, i, j);
+    }
   }
 }
 
-GameOfLifeView.prototype.update_display = function (game) {
+GameOfLifeView.prototype.updateDisplay = function (game) {
   for (var i = 0; i < this.rows; i++) {
     for (var j = 0; j < this.cols; j++) {
-      this.cells[i][j].update_display(game.grid[i][j]);
+      this.cells[i][j].updateDisplay(game.getCellState(i, j));
     }
   }
 };
 
-GameOfLifeView.prototype.reset_display = function () {
+GameOfLifeView.prototype.resetDisplay = function () {
   for (var i = 0; i < this.rows; i++) {
     for (var j = 0; j < this.cols; j++) {
-      this.cells[i][j].reset_display();
+      this.cells[i][j].resetDisplay();
     }
   }
 };
 
 function CellView (controller, parent, row, col) {
   this.div = document.createElement("div");
-  this.reset_display();
+  this.resetDisplay();
   parent.appendChild(this.div);
 
   this.div.addEventListener("click",
@@ -38,7 +39,7 @@ function CellView (controller, parent, row, col) {
     });
 };
 
-CellView.prototype.update_display = function (value) {
+CellView.prototype.updateDisplay = function (value) {
   if (value === 1) {
     this.div.className = "alive";
   } else {
@@ -48,6 +49,6 @@ CellView.prototype.update_display = function (value) {
   }
 };
 
-CellView.prototype.reset_display = function () {
+CellView.prototype.resetDisplay = function () {
   this.div.className = "unvisited";
 }

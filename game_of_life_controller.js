@@ -8,8 +8,8 @@ function GameOfLifeController (parent, game) {
 GameOfLifeController.prototype.randomize = function (p) {
   this.naughto();
   this.game.randomize(p);
-  this.view.reset_display();
-  this.view.update_display(this.game);
+  this.view.resetDisplay();
+  this.view.updateDisplay(this.game);
 };
 
 GameOfLifeController.prototype.clear = function () {
@@ -18,7 +18,7 @@ GameOfLifeController.prototype.clear = function () {
 
 GameOfLifeController.prototype.next_generation = function () {
   this.game.nextGeneration();
-  this.view.update_display(this.game);
+  this.view.updateDisplay(this.game);
 };
 
 GameOfLifeController.prototype.auto = function () {
@@ -51,18 +51,16 @@ GameOfLifeController.prototype.game_input = function () {
     var line = lines[i];
 
     for (var j = 0; j < line.length; j++) {
-      if (line[j] === "*")
-        this.game.grid[i + row_offset][j + col_offset] = 1;
+      if (line[j] === "*") {
+        this.game.setCellAlive(i + row_offset, j + col_offset);
+      }
     }
   }
 
-  this.view.update_display(this.game);
+  this.view.updateDisplay(this.game);
 };
 
 //html clicks
-GameOfLifeController.prototype.cell_click = function (row, col) {
-  var value = (this.game.grid[row][col] + 1) % 2;
-
-  this.game.grid[row][col] = value;
-  this.view.cells[row][col].update_display(value);
+GameOfLifeController.prototype.cell_click = function (i, j) {
+  this.view.cells[i][j].updateDisplay(this.game.flipCellState(i, j));
 }
