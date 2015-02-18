@@ -43,5 +43,6 @@ GameOfLifeController.prototype.gameInput = function () {
 
 //html clicks
 GameOfLifeController.prototype.cellClick = function (i, j) {
-  this.view.cells[i][j].updateDisplay(this.game.flipCellState(i, j));
+  this.game.flipCellState(i, j);
+  this.view.cells[i][j].updateDisplay(this.game.getCellState(i, j));
 }

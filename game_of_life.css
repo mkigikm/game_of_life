@@ -34,20 +34,19 @@ ul {
 main {
   margin: 0 auto;
   display: block;
-  width: 700px;
-  height: 500px;
+  width:  1000px;
+  height: 1000px;
 }
 
 div {
   float: left;
-  width: 8px;
-  height: 8px;
-  border: 1px solid black;
+  width: 4px;
+  height: 4px;
 }
 
 #board {
-  width: 500px;
-  height: 500px;
+  width:  1000px;
+  height: 1000px;
   float: left;
 }
 
