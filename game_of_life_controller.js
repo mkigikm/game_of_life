@@ -17,7 +17,7 @@ GameOfLifeController.prototype.clear = function () {
 };
 
 GameOfLifeController.prototype.next_generation = function () {
-  this.game.next_generation();
+  this.game.nextGeneration();
   this.view.update_display(this.game);
 };
 

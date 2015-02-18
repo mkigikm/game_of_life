@@ -10,8 +10,9 @@ function GameOfLife (rows, cols, underpop, overpop, birth) {
   for (var i = 0; i < rows; i++) {
     this.grid[i] = new Array(cols);
 
-    for (var j = 0; j < cols; j++)
+    for (var j = 0; j < cols; j++) {
       this.grid[i][j] = 0;
+    }
   }
 }
 
@@ -22,24 +23,26 @@ GameOfLife.prototype.randomize = function (p) {
   }
 };
 
-GameOfLife.prototype.wrap_add = function (i, d_i, max) {
-  d_i = (d_i + i) % max;
-  if (d_i === -1) d_i = max - 1;
+GameOfLife.prototype.wrapAdd = function (i, di, max) {
+  i = (i + di) % max;
+  if (i === -1) i = max - 1;
 
-  return d_i;
+  return i;
 };
 
-GameOfLife.prototype.count_neighbors = function (row, col) {
+GameOfLife.prototype.countNeighbors = function (row, col) {
   var neighbors = 0;
 
-  for (var d_i = -1; d_i < 2; d_i++) {
-    for (var d_j = -1; d_j < 2; d_j++) {
-      if (d_i === 0 && d_j === 0) continue;
+  for (var di = -1; di < 2; di++) {
+    for (var dj = -1; dj < 2; dj++) {
+      if (di === 0 && dj === 0){
+        continue;
+      }
 
-      var n_i = this.wrap_add(row, d_i, this.rows);
-      var n_j = this.wrap_add(col, d_j, this.cols);
+      var ni = this.wrapAdd(row, di, this.rows);
+      var nj = this.wrapAdd(col, dj, this.cols);
 
-      if (this.grid[n_i][n_j] & 1 === 1)
+      if (this.grid[ni][nj] & 1 === 1)
         neighbors += 1;
     }
   }
@@ -47,15 +50,16 @@ GameOfLife.prototype.count_neighbors = function (row, col) {
   return neighbors;
 }
 
-GameOfLife.prototype.count_all_neighbors = function () {
+GameOfLife.prototype.countAllNeighbors = function () {
   for (var i = 0; i < this.rows; i++) {
-    for (var j = 0; j < this.cols; j++)
+    for (var j = 0; j < this.cols; j++) {
       this.grid[i][j] = this.grid[i][j] |
-        (this.count_neighbors(i, j) << 1);
+        (this.countNeighbors(i, j) << 1);
+    }
   }
 };
 
-GameOfLife.prototype.birth_next_generation = function () {
+GameOfLife.prototype.birthNextGeneration = function () {
   for (var i = 0; i < this.rows; i++) {
     for (var j = 0; j < this.cols; j++) {
       var neighbors = this.grid[i][j] >> 1;
@@ -71,7 +75,7 @@ GameOfLife.prototype.birth_next_generation = function () {
   }
 };
 
-GameOfLife.prototype.next_generation = function () {
-  this.count_all_neighbors();
-  this.birth_next_generation();
+GameOfLife.prototype.nextGeneration = function () {
+  this.countAllNeighbors();
+  this.birthNextGeneration();
 };
