@@ -35,7 +35,7 @@ function CellView (controller, parent, row, col) {
 
   this.div.addEventListener("click",
     function() {
-      controller.cell_click(row, col);
+      controller.cellClick(row, col);
     });
 };
 

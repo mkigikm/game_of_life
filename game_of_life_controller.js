@@ -16,16 +16,16 @@ GameOfLifeController.prototype.clear = function () {
   this.randomize(0);
 };
 
-GameOfLifeController.prototype.next_generation = function () {
+GameOfLifeController.prototype.nextGeneration = function () {
   this.game.nextGeneration();
   this.view.updateDisplay(this.game);
 };
 
 GameOfLifeController.prototype.auto = function () {
   if (this.timer === null) {
-    this.next_generation();
+    this.nextGeneration();
     var me = this;
-    this.timer = setInterval(function () { me.next_generation() }, 500);
+    this.timer = setInterval(function () { me.nextGeneration() }, 500);
   }
 };
 
@@ -34,25 +34,25 @@ GameOfLifeController.prototype.naughto = function () {
   this.timer = null;
 };
 
-GameOfLifeController.prototype.game_input = function () {
+GameOfLifeController.prototype.gameInput = function () {
   var board = document.getElementById("game_input").value;
   this.clear();
 
   var lines = board.split("\n");
 
-  var row_offset = ~~((this.game.rows - lines.length) / 2);
+  var rowOffset = ~~((this.game.rows - lines.length) / 2);
 
-  var max_columns = Math.max.apply(null,
+  var maxColumns = Math.max.apply(null,
       lines.map(function (line) { return line.length;})
     );
-  var col_offset = ~~((this.game.cols - max_columns) / 2);
+  var colOffset = ~~((this.game.cols - maxColumns) / 2);
 
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i];
 
     for (var j = 0; j < line.length; j++) {
       if (line[j] === "*") {
-        this.game.setCellAlive(i + row_offset, j + col_offset);
+        this.game.setCellAlive(i + rowOffset, j + colOffset);
       }
     }
   }
@@ -61,6 +61,6 @@ GameOfLifeController.prototype.game_input = function () {
 };
 
 //html clicks
-GameOfLifeController.prototype.cell_click = function (i, j) {
+GameOfLifeController.prototype.cellClick = function (i, j) {
   this.view.cells[i][j].updateDisplay(this.game.flipCellState(i, j));
 }
