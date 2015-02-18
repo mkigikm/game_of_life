@@ -14,6 +14,7 @@ GameOfLifeController.prototype.randomize = function (p) {
 
 GameOfLifeController.prototype.clear = function () {
   this.randomize(0);
+  this.view.resetDisplay();
 };
 
 GameOfLifeController.prototype.nextGeneration = function () {
@@ -25,7 +26,7 @@ GameOfLifeController.prototype.auto = function () {
   if (this.timer === null) {
     this.nextGeneration();
     var me = this;
-    this.timer = setInterval(function () { me.nextGeneration() }, 500);
+    this.timer = setInterval(function () { me.nextGeneration() }, 1);
   }
 };
 

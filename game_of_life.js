@@ -4,11 +4,12 @@ function GameOfLife (rows, cols, underpop, overpop, birth) {
   this.underpop = underpop;
   this.overpop = overpop;
   this.birth = birth;
-  this.neighborCount = new Array(cols);
+  this.neighborCount = new Int8Array(cols);
 
   this.grid = new Array(rows);
   for (var i = 0; i < rows; i++) {
-    this.grid[i] = new Array(this.colShift(cols) + 1);
+    // this.grid[i] = new Array(this.colShift(cols) + 1);
+    this.grid[i] = new Int32Array(this.colShift(cols) + 1);
 
     for (var j = 0; j < cols; j++) {
       this.setCellDead(i, j);
@@ -132,12 +133,14 @@ GameOfLife.prototype.deadRule = function (i, j, neighbors) {
 GameOfLife.prototype.nextGeneration = function () {
   // this.countAllNeighbors();
   // this.birthNextGeneration();
-  var first = this.grid[0].slice(0);
-  var top   = this.grid[this.rows - 1].slice(0);
+  var first = new Int32Array(this.grid[0]);
+  var top   = new Int32Array(this.grid[this.cols - 1]);
+  // var top   = this.grid[this.rows - 1].slice(0);
 
   for (var i = 0; i < this.rows - 1; i++) {
     this.storeRowNeighbors(this.grid[i], top, this.grid[i+1]);
-    top = this.grid[i].slice(0);
+    // top = this.grid[i].slice(0);
+    top = new Int32Array(this.grid[i]);
     this.birthRow(i);
   }
 
@@ -146,12 +149,12 @@ GameOfLife.prototype.nextGeneration = function () {
 };
 
 GameOfLife.prototype.getCellStateFromRow = function (row, j) {
-  return (row[this.colShift(j)] >> this.bitShift(j)) & 1;
+  return (row[this.colShift(j)] >>> this.bitShift(j)) & 1;
 }
 
 GameOfLife.prototype.getCellState = function (i, j) {
   // return this.grid[i][j] & 1;
-  return (this.grid[i][this.colShift(j)] >> this.bitShift(j)) & 1
+  return (this.grid[i][this.colShift(j)] >>> this.bitShift(j)) & 1
 };
 
 GameOfLife.prototype.setCellAlive = function (i, j) {
@@ -172,9 +175,9 @@ GameOfLife.prototype.flipCellState = function (i, j) {
 };
 
 GameOfLife.prototype.colShift = function (j) {
-  return ~~(j / 31);
+  return ~~(j / 32);
 };
 
 GameOfLife.prototype.bitShift = function (j) {
-  return j % 31;
+  return j % 32;
 };

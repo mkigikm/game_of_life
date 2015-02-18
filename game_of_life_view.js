@@ -40,12 +40,14 @@ function CellView (controller, parent, row, col) {
 };
 
 CellView.prototype.updateDisplay = function (value) {
-  if (value === 1) {
+  if (value === 1 && this.div.className != "alive") {
     this.div.className = "alive";
-  } else {
-    var current = this.div.className;
-
-    this.div.className = current === "unvisited" ? current : "dead";
+  }
+  if (value === 0 && this.div.className === "alive") {
+    // var current = this.div.className;
+    //
+    // this.div.className = current === "unvisited" ? current : "dead";
+    this.div.className = "dead";
   }
 };
 
