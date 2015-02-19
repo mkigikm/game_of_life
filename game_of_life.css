@@ -39,13 +39,13 @@ main {
 
 div {
   float: left;
-  width: 1px;
-  height: 1px;
+  width: 2px;
+  height: 2px;
 }
 
 #board {
-  width:  400px;
-  height: 400px;
+  width:  600px;
+  height: 600px;
 }
 
 .sidebar {
