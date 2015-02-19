@@ -1,9 +1,11 @@
-function GameOfLife (rows, cols, underpop, overpop, birth) {
+function GameOfLife (rows, cols, stayAliveCondition, birthCondition) {
   this.rows = rows;
   this.cols = cols;
-  this.underpop = underpop;
-  this.overpop = overpop;
-  this.birth = birth;
+  // this.underpop = underpop;
+  // this.overpop = overpop;
+  // this.birth = birth;
+  this.stayAliveCondition = stayAliveCondition;
+  this.birthCondition = birthCondition;
   this.neighborCount = new Int8Array(cols);
 
   this.grid = new Array(rows);
@@ -119,13 +121,19 @@ GameOfLife.prototype.birthRow = function (i) {
 };
 
 GameOfLife.prototype.aliveRule = function (i, j, neighbors) {
-  if (neighbors < this.underpop || neighbors > this.overpop) {
+  // if (neighbors < this.underpop || neighbors > this.overpop) {
+  //   this.setCellDead(i, j);
+  // }
+  if (this.stayAliveCondition.indexOf(neighbors) === -1) {
     this.setCellDead(i, j);
   }
 };
 
 GameOfLife.prototype.deadRule = function (i, j, neighbors) {
-  if (neighbors === this.birth) {
+  // if (neighbors === this.birth) {
+  //   this.setCellAlive(i, j);
+  // }
+  if (this.birthCondition.indexOf(neighbors) !== -1) {
     this.setCellAlive(i, j);
   }
 };
