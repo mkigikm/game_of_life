@@ -1,5 +1,5 @@
 function setup () {
-  var game = new GameOfLife(300,300,[2,3],[3]);
+  var game = new GameOfLife(250,250,[3],[2,3]);
   c = new GameOfLifeController(document.getElementById("board"), game);
 }
 

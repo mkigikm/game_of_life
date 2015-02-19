@@ -34,7 +34,7 @@ ul {
 main {
   margin: 0 auto;
   display: block;
-  width: 400px;
+  width: 500px;
 }
 
 div {
@@ -44,8 +44,8 @@ div {
 }
 
 #board {
-  width:  600px;
-  height: 600px;
+  width:  500px;
+  height: 500px;
 }
 
 .sidebar {

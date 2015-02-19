@@ -1,11 +1,11 @@
-function GameOfLife (rows, cols, stayAliveCondition, birthCondition) {
+function GameOfLife (rows, cols, birthRule, survivalRule) {
   this.rows = rows;
   this.cols = cols;
   // this.underpop = underpop;
   // this.overpop = overpop;
   // this.birth = birth;
-  this.stayAliveCondition = stayAliveCondition;
-  this.birthCondition = birthCondition;
+  this.birthRule = birthRule;
+  this.survivalRule = survivalRule;
   this.neighborCount = new Int8Array(cols);
 
   this.grid = new Array(rows);
@@ -80,6 +80,69 @@ GameOfLife.prototype.birthNextGeneration = function () {
   }
 };
 
+GameOfLife.prototype.countNeighbors = function (row, j, top, bottom) {
+  var count = 0;
+
+  for (var dj = -1; dj < 2; dj++) {
+    count += this.getCellStateFromRow(top, this.wrapAdd(j, dj, this.cols));
+  }
+
+  for (dj = -1; dj < 2; dj+= 2) {
+    count += this.getCellStateFromRow(row, this.wrapAdd(j, dj, this.cols));
+  }
+  for (dj = -1; dj < 2; dj++) {
+    count += this.getCellStateFromRow(bottom, this.wrapAdd(j, dj, this.cols));
+  }
+
+  return count;
+};
+
+GameOfLife.prototype.countEdgeNeighbors = function (row, j, top, bottom, firstState) {
+  var count = 0;
+
+  for (var dj = -1; dj < 2; dj++) {
+    count += this.getCellStateFromRow(top, this.wrapAdd(j, dj, this.cols));
+  }
+
+  // for (dj = -1; dj < 2; dj+= 2) {
+    count += this.getCellStateFromRow(row, this.wrapAdd(j, -1, this.cols));
+  // }
+  for (dj = -1; dj < 2; dj++) {
+    count += this.getCellStateFromRow(bottom, this.wrapAdd(j, dj, this.cols));
+  }
+  count += firstState;
+
+  return count;
+};
+
+GameOfLife.prototype.birthCell = function (i, j, neighbors) {
+
+  if (this.getCellState(i, j) === 1) {
+    this.aliveRule(i, j, neighbors);
+  } else {
+    this.deadRule(i, j, neighbors);
+  };
+}
+
+GameOfLife.prototype.birthRow2 = function (i, top, bottom) {
+  var row = this.grid[i];
+  // console.log("row " + i)
+  var firstState = this.getCellState(i, 0);
+  var prevNeighbors = this.countNeighbors(row, 0, top, bottom);
+  var curNeighbors = 0;
+
+  for (var j = 1; j < this.cols - 1; j++) {
+    curNeighbors = this.countNeighbors(row, j, top, bottom);
+    this.birthCell(i, j - 1, prevNeighbors);
+    prevNeighbors = curNeighbors;
+  }
+
+  curNeighbors = this.countEdgeNeighbors(row, j, top, bottom, firstState);
+  this.birthCell(i, j - 1, prevNeighbors);
+  this.birthCell(i, j, curNeighbors);
+  // console.log("last col is " + j)
+};
+
 GameOfLife.prototype.storeNeighborCount = function (j, count) {
   // this.grid[i][j] = this.grid[i][j] | (count << 1);
   this.neighborCount[j] = count;
@@ -87,22 +150,19 @@ GameOfLife.prototype.storeNeighborCount = function (j, count) {
 
 GameOfLife.prototype.storeRowNeighbors = function (row, top, bottom) {
   for (var j = 0; j < this.cols; j++) {
-    var count = 0;
+    // var count = 0;
+    var count = this.countNeighbors(row, j, top, bottom);
 
-    for (var dj = -1; dj < 2; dj++) {
-      count += this.getCellStateFromRow(top, this.wrapAdd(j, dj, this.cols));
-      // console.log("counting top neighbors " + this.getCellStateFromRow(top, this.wrapAdd(j, dj, this.cols)));
-      // console.log(top[this.colShift(dj)])
-    }
-
-    for (dj = -1; dj < 2; dj+= 2) {
-      count += this.getCellStateFromRow(row, this.wrapAdd(j, dj, this.cols));
-      // console.log("counting row neighbors " + count)
-    }
-    for (dj = -1; dj < 2; dj++) {
-      count += this.getCellStateFromRow(bottom, this.wrapAdd(j, dj, this.cols));
-      // console.log("counting bottom neighbors " + count)
-    }
+    // for (var dj = -1; dj < 2; dj++) {
+    //   count += this.getCellStateFromRow(top, this.wrapAdd(j, dj, this.cols));
+    // }
+    //
+    // for (dj = -1; dj < 2; dj+= 2) {
+    //   count += this.getCellStateFromRow(row, this.wrapAdd(j, dj, this.cols));
+    // }
+    // for (dj = -1; dj < 2; dj++) {
+    //   count += this.getCellStateFromRow(bottom, this.wrapAdd(j, dj, this.cols));
+    // }
     // console.log(count + " neighbors")
     this.storeNeighborCount(j, count);
   }
@@ -124,16 +184,24 @@ GameOfLife.prototype.aliveRule = function (i, j, neighbors) {
   // if (neighbors < this.underpop || neighbors > this.overpop) {
   //   this.setCellDead(i, j);
   // }
-  if (this.stayAliveCondition.indexOf(neighbors) === -1) {
+  if (this.survivalRule.indexOf(neighbors) === -1) {
+
+      // console.log("killing " + i + "," + j)
+      // console.log("neighbors = " + neighbors)
     this.setCellDead(i, j);
-  }
+  } //else {
+  //   console.log("surviving" + i + "," + j)
+  //   console.log("neighbors = " + neighbors)
+  // }
 };
 
 GameOfLife.prototype.deadRule = function (i, j, neighbors) {
   // if (neighbors === this.birth) {
   //   this.setCellAlive(i, j);
   // }
-  if (this.birthCondition.indexOf(neighbors) !== -1) {
+  if (this.birthRule.indexOf(neighbors) !== -1) {
+        // console.log("birthing " + i + "," + j)
+        // console.log("neighbors = " + neighbors)
     this.setCellAlive(i, j);
   }
 };
@@ -146,14 +214,18 @@ GameOfLife.prototype.nextGeneration = function () {
   // var top   = this.grid[this.rows - 1].slice(0);
 
   for (var i = 0; i < this.rows - 1; i++) {
-    this.storeRowNeighbors(this.grid[i], top, this.grid[i+1]);
+    // this.storeRowNeighbors(this.grid[i], top, this.grid[i+1]);
     // top = this.grid[i].slice(0);
-    top = new Int32Array(this.grid[i]);
-    this.birthRow(i);
+    var nextTop = new Int32Array(this.grid[i]);
+    this.birthRow2(i, top, this.grid[i+1]);
+    // top = new Int32Array(this.grid[i]);
+    top = nextTop;
+    // this.birthRow(i);
   }
 
-  this.storeRowNeighbors(this.grid[i], top, first);
-  this.birthRow(i);
+  // this.storeRowNeighbors(this.grid[i], top, first);
+  // this.birthRow(i);
+  this.birthRow2(i, top, first);
 };
 
 GameOfLife.prototype.getCellStateFromRow = function (row, j) {
