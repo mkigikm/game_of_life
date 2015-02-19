@@ -1,8 +1,9 @@
-function GameOfLife (rows, cols, birthRule, survivalRule) {
+function GameOfLife (rows, cols, birthRule, survivalRule, torus) {
   this.rows = rows;
   this.cols = cols;
   this.birthRule = birthRule;
   this.survivalRule = survivalRule;
+  this.torus = torus;
 
   this.grid = new Array(rows);
   for (var i = 0; i < rows; i++) {
@@ -43,16 +44,19 @@ GameOfLife.prototype.countRightEdgeNeighbors =
     function (row, top, bot, firstState) {
   var count = 0;
 
+  count += this.getCellStateFromRow(top, this.cols - 2);
   count += this.getCellStateFromRow(top, this.cols - 1);
-  count += this.getCellStateFromRow(top,     this.cols);
-  count += this.getCellStateFromRow(top,             0);
+  if (this.torus)
+   count += this.getCellStateFromRow(top,            0);
 
-  count += this.getCellStateFromRow(row, this.cols - 1);
-  count += firstState;
+  count += this.getCellStateFromRow(row, this.cols - 2);
+  if (this.torus)
+    count += firstState;
 
+  count += this.getCellStateFromRow(bot, this.cols - 2);
   count += this.getCellStateFromRow(bot, this.cols - 1);
-  count += this.getCellStateFromRow(bot,     this.cols);
-  count += this.getCellStateFromRow(bot,             0);
+  if (this.torus)
+    count += this.getCellStateFromRow(bot,           0);
 
   return count;
 };
@@ -61,23 +65,32 @@ GameOfLife.prototype.countLeftEdgeNeighbors =
     function (row, top, bot) {
   var count = 0;
 
-  count += this.getCellStateFromRow(top, this.cols - 1);
-  count += this.getCellStateFromRow(top,             0);
-  count += this.getCellStateFromRow(top,             1);
+  if (this.torus)
+    count += this.getCellStateFromRow(top, this.cols - 1);
+  count += this.getCellStateFromRow(top,               0);
+  count += this.getCellStateFromRow(top,               1);
 
-  count += this.getCellStateFromRow(row, this.cols - 1);
-  count += this.getCellStateFromRow(row,             0);
+  if (this.torus)
+    count += this.getCellStateFromRow(row, this.cols - 1);
+  count += this.getCellStateFromRow(row,               1);
 
-  count += this.getCellStateFromRow(bot, this.cols - 1);
-  count += this.getCellStateFromRow(bot,             0);
-  count += this.getCellStateFromRow(bot,             1);
+  if (this.torus)
+    count += this.getCellStateFromRow(bot, this.cols - 1);
+  count += this.getCellStateFromRow(bot,               0);
+  count += this.getCellStateFromRow(bot,               1);
 
   return count;
 };
 
 GameOfLife.prototype.nextGeneration = function () {
-  var first = new Int32Array(this.grid[0]);
-  var top   = new Int32Array(this.grid[this.cols - 1]);
+  var first, top;
+  if (this.torus) {
+    first = new Int32Array(this.grid[0]);
+    top   = new Int32Array(this.grid[this.cols - 1]);
+  } else {
+    first = new Int32Array(this.colShift(this.cols) + 1);
+    top   = new Int32Array(this.colShift(this.cols) + 1);
+  }
 
   for (var i = 0; i < this.rows - 1; i++) {
     var nextTop = new Int32Array(this.grid[i]);
@@ -131,7 +144,7 @@ GameOfLife.prototype.getCellStateFromRow = function (row, j) {
 }
 
 GameOfLife.prototype.getCellState = function (i, j) {
-  return (this.grid[i][this.colShift(j)] >>> this.bitShift(j)) & 1
+  return this.getCellStateFromRow(this.grid[i], j);
 };
 
 GameOfLife.prototype.setCellAlive = function (i, j) {
