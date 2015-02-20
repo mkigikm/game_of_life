@@ -39,8 +39,8 @@ main {
 
 div {
   float: left;
-  width: 100px;
-  height: 100px;
+  width:  20px;
+  height: 20px;
 }
 
 #board {
@@ -68,13 +68,21 @@ footer ul {
 }
 
 .unvisited {
-  background: white;
+  background: black;
 }
 
 .dead {
-  background: lightblue;
+  background: black;
+}
+
+.dying {
+  background: blue;
 }
 
 .alive {
-  background: green;
+  background: red;
+}
+
+.cond {
+  background: yellow;
 }
