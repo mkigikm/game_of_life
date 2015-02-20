@@ -10,8 +10,10 @@ function setup () {
   var briansBrain = new BriansBrainRules();
   var wireWorld   = new WireWorld();
 
-  var game        = new CellularAutomata(25, 25, wireWorld, true);
   var torus       = true;
+
+  var game        = new CellularAutomata(910, 650, wireWorld, torus);
+  parseWireWorld(game)
 
   c = new GameOfLifeController(document.getElementById("board"), game);
 }

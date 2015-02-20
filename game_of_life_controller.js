@@ -1,6 +1,7 @@
 function GameOfLifeController (parent, game) {
   this.game = game;
   this.view = new GameOfLifeView(this, parent, game.rows, game.cols);
+  this.view.updateDisplay(game);
   this.timer = null;
 }
 
