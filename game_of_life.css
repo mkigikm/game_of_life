@@ -34,18 +34,18 @@ ul {
 main {
   margin: 0 auto;
   display: block;
-  width: 1000px;
+  width: 500px;
 }
 
 div {
   float: left;
-  width: 1px;
-  height: 1px;
+  width: 10px;
+  height: 10px;
 }
 
 #board {
-  width:  1000px;
-  height: 1000px;
+  width:  500px;
+  height: 500px;
 }
 
 .sidebar {

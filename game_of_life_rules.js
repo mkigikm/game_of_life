@@ -4,14 +4,14 @@ function GameOfLifeClass (birthRule, survivalRule) {
   this.states       = 2;
 }
 
-GameOfLifeClass.prototype.transistionRule = function (state, neighborCounts) {
-  return state === 1 ? this.aliveRule(neighborCounts[1]) :
-    this.deadRule(neighborCounts[1]);
+GameOfLifeClass.prototype.transition = function (state, count) {
+  return state === 1 ? this.aliveRule(count[1]) :
+    this.deadRule(count[1]);
 }
 GameOfLifeClass.prototype.aliveRule = function (aliveCount) {
-  this.survivalRule.indexOf(aliveCount) === -1 ? 0 : 1;
+  return this.survivalRule.indexOf(aliveCount) === -1 ? 0 : 1;
 };
 
 GameOfLifeClass.prototype.deadRule = function (aliveCount) {
-  this.birthRule.indexOf(aliveCount) === -1 ? 0 : 1;
+  return this.birthRule.indexOf(aliveCount) === -1 ? 0 : 1;
 };
