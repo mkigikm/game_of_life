@@ -1,28 +1,32 @@
-function GameOfLife (rows, cols, birthRule, survivalRule, torus) {
-  this.rows = rows;
-  this.cols = cols;
-  this.birthRule = birthRule;
-  this.survivalRule = survivalRule;
-  this.torus = torus;
+function CellularAutomata (rows, cols, transitionRule, torus) {
+  this.rows           = rows;
+  this.cols           = cols;
+  this.transitionRule = transitionRule;
+  this.torus          = torus;
+
+  this.shift  = Math.ceil(Math.log(transitionRule.states) / Math.LN2);
+  this.mask   = Math.pow(2, this.shift) - 1;
+  this.perInt = 32 / this.shift;
 
   this.grid = new Array(rows);
   for (var i = 0; i < rows; i++) {
     this.grid[i] = new Int32Array(this.colShift(cols) + 1);
 
     for (var j = 0; j < cols; j++) {
-      this.setCellDead(i, j);
+      this.setCellState(i, j, 0);
     }
   }
 }
 
-GameOfLife.prototype.randomize = function (p) {
+CellularAutomata.prototype.randomize = function (p) {
   for (var i = 0; i < this.rows; i++) {
-    for (var j = 0; j < this.cols; j++)
+    for (var j = 0; j < this.cols; j++) {
       p > Math.random() ? this.setCellAlive(i, j) : this.setCellDead(i, j);
+    }
   }
 };
 
-GameOfLife.prototype.countInteriorNeighbors = function (row, j, top, bot) {
+CellularAutomata.prototype.countInteriorNeighbors = function (row, j, top, bot) {
   var count = 0;
 
   for (var dj = -1; dj < 2; dj++) {
@@ -40,7 +44,7 @@ GameOfLife.prototype.countInteriorNeighbors = function (row, j, top, bot) {
   return count;
 };
 
-GameOfLife.prototype.countRightEdgeNeighbors =
+CellularAutomata.prototype.countRightEdgeNeighbors =
     function (row, top, bot, firstState) {
   var count = 0;
 
@@ -61,7 +65,7 @@ GameOfLife.prototype.countRightEdgeNeighbors =
   return count;
 };
 
-GameOfLife.prototype.countLeftEdgeNeighbors =
+CellularAutomata.prototype.countLeftEdgeNeighbors =
     function (row, top, bot) {
   var count = 0;
 
@@ -82,7 +86,7 @@ GameOfLife.prototype.countLeftEdgeNeighbors =
   return count;
 };
 
-GameOfLife.prototype.nextGeneration = function () {
+CellularAutomata.prototype.nextGeneration = function () {
   var first, top;
   if (this.torus) {
     first = new Int32Array(this.grid[0]);
@@ -101,7 +105,7 @@ GameOfLife.prototype.nextGeneration = function () {
   this.birthRow(i, top, first);
 };
 
-GameOfLife.prototype.birthRow = function (i, top, bot) {
+CellularAutomata.prototype.birthRow = function (i, top, bot) {
   var row = this.grid[i];
   var firstState = this.getCellState(i, 0);
   var prevNeighbors = this.countLeftEdgeNeighbors(row, top, bot);
@@ -118,7 +122,7 @@ GameOfLife.prototype.birthRow = function (i, top, bot) {
   this.birthCell(i, j, curNeighbors);
 };
 
-GameOfLife.prototype.birthCell = function (i, j, neighbors) {
+CellularAutomata.prototype.birthCell = function (i, j, neighbors) {
 
   if (this.getCellState(i, j) === 1) {
     this.aliveRule(i, j, neighbors);
@@ -127,42 +131,42 @@ GameOfLife.prototype.birthCell = function (i, j, neighbors) {
   };
 };
 
-GameOfLife.prototype.aliveRule = function (i, j, neighbors) {
+CellularAutomata.prototype.aliveRule = function (i, j, neighbors) {
   if (this.survivalRule.indexOf(neighbors) === -1) {
     this.setCellDead(i, j);
   }
 };
 
-GameOfLife.prototype.deadRule = function (i, j, neighbors) {
+CellularAutomata.prototype.deadRule = function (i, j, neighbors) {
   if (this.birthRule.indexOf(neighbors) !== -1) {
     this.setCellAlive(i, j);
   }
 };
 
-GameOfLife.prototype.getCellStateFromRow = function (row, j) {
+CellularAutomata.prototype.getCellStateFromRow = function (row, j) {
   return (row[this.colShift(j)] >>> this.bitShift(j)) & 1;
 }
 
-GameOfLife.prototype.getCellState = function (i, j) {
+CellularAutomata.prototype.getCellState = function (i, j) {
   return this.getCellStateFromRow(this.grid[i], j);
 };
 
-GameOfLife.prototype.setCellAlive = function (i, j) {
+CellularAutomata.prototype.setCellAlive = function (i, j) {
   this.grid[i][this.colShift(j)] |= 1 << this.bitShift(j)
 };
 
-GameOfLife.prototype.setCellDead = function (i, j) {
+CellularAutomata.prototype.setCellDead = function (i, j) {
   this.grid[i][this.colShift(j)] &= ~(1 << this.bitShift(j));
 };
 
-GameOfLife.prototype.flipCellState = function (i, j) {
+CellularAutomata.prototype.flipCellState = function (i, j) {
   this.grid[i][this.colShift(j)] ^= (1 << this.bitShift(j));
 };
 
-GameOfLife.prototype.colShift = function (j) {
-  return ~~(j / 32);
+CellularAutomata.prototype.colShift = function (j) {
+  return ~~(j / this.perInt);
 };
 
-GameOfLife.prototype.bitShift = function (j) {
-  return j % 32;
+CellularAutomata.prototype.bitShift = function (j) {
+  return (j % this.perInt) * this.shift;
 };
