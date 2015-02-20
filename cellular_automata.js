@@ -48,11 +48,11 @@ CellularAutomata.prototype.countRightEdge =
   count[this.getCellStateFromRow(top, this.cols - 2)]++;
   count[this.getCellStateFromRow(top, this.cols - 1)]++;
   if (this.torus)
-   count[this.getCellStateFromRow(top,            0)]++;
+    count[this.getCellStateFromRow(top,            0)]++;
 
   count[this.getCellStateFromRow(row, this.cols - 2)]++;
   if (this.torus)
-    count += firstState;
+    count[firstState]++;
 
   count[this.getCellStateFromRow(bot, this.cols - 2)]++;
   count[this.getCellStateFromRow(bot, this.cols - 1)]++;
@@ -66,18 +66,18 @@ CellularAutomata.prototype.countLeftEdge = function (row, top, bot) {
   var count = new Int32Array(this.rule.states);
 
   if (this.torus)
-    count += this.getCellStateFromRow(top, this.cols - 1);
-  count += this.getCellStateFromRow(top,               0);
-  count += this.getCellStateFromRow(top,               1);
+    count[this.getCellStateFromRow(top, this.cols - 1)]++;
+  count[this.getCellStateFromRow(top,               0)]++;
+  count[this.getCellStateFromRow(top,               1)]++;
 
   if (this.torus)
-    count += this.getCellStateFromRow(row, this.cols - 1);
-  count += this.getCellStateFromRow(row,               1);
+    count[this.getCellStateFromRow(row, this.cols - 1)]++;
+  count[this.getCellStateFromRow(row,               1)]++;
 
   if (this.torus)
-    count += this.getCellStateFromRow(bot, this.cols - 1);
-  count += this.getCellStateFromRow(bot,               0);
-  count += this.getCellStateFromRow(bot,               1);
+    count[this.getCellStateFromRow(bot, this.cols - 1)]++;
+  count[this.getCellStateFromRow(bot,               0)]++;
+  count[this.getCellStateFromRow(bot,               1)]++;
 
   return count;
 };

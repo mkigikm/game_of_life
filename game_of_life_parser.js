@@ -42,7 +42,7 @@ var parseLife105 = function (lines, game) {
 
     for (var j = 0; j < line.length; j++) {
       if (line[j] === "*") {
-        game.setCellAlive(i + rowOffset, j + colOffset);
+        game.setCellState(i + rowOffset, j + colOffset, 1);
       }
     }
   }
@@ -70,7 +70,7 @@ var parseRLE = function (lines, x, y, game) {
     switch (match[2]) {
       case "o":
         while (count--) {
-          game.setCellAlive(i, j++);
+          game.setCellState(i, j++, 1);
         }
         break;
       case "b":
