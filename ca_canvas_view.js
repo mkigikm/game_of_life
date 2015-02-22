@@ -1,15 +1,30 @@
-function CACanvasView (rows, cols, scale, colors, canvas) {
-  this.rows   = rows;
-  this.cols   = cols;
-  this.scale  = scale;
-  this.colors = colors;
+function CACanvasView (game, scale, colors, hardware, canvas) {
+  this.rows   = game.rows;
+  this.cols   = game.cols;
   this.canvas = canvas;
   this.ctx    = canvas.getContext('2d');
 
-  canvas.width        = cols;
-  canvas.height       = rows;
-  canvas.style.width  = scale * cols + 'px';
-  canvas.style.height = scale * rows + 'px';
+  this.setupDisplay(scale, colors, hardware);
+};
+
+CACanvasView.prototype.setupDisplay = function (scale, colors, hardware) {
+  console.log(this.rows, this.cols, scale, hardware)
+  this.scale    = scale;
+  this.colors   = colors;
+  this.hardware = hardware;
+
+  if (this.hardware) {
+    this.canvas.width        = this.cols;
+    this.canvas.height       = this.rows;
+    this.canvas.style.width  = this.scale * this.cols + 'px';
+    this.canvas.style.height = this.scale * this.rows + 'px';
+  } else {
+    this.canvas.width        = this.cols * this.scale;
+    this.canvas.height       = this.rows * this.scale;
+    this.canvas.style.width  = this.canvas.width + 'px';
+    this.canvas.style.height = this.canvas.height + 'px';
+  }
+  console.log(this.canvas.width, this.canvas.height)
 };
 
 CACanvasView.prototype.resetDisplay = function () {

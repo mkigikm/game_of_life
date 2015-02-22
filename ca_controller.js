@@ -33,7 +33,8 @@ CAController.prototype.wireControls = function () {
     $('#go').text('Go');
   }.bind(this));
 
-  $('refreshDisplay').click(function () {
+  $('#refreshDisplay').click(function () {
+    console.log('refreshing')
     this.setupDisplay();
   }.bind(this));
 
@@ -43,20 +44,31 @@ CAController.prototype.wireControls = function () {
 };
 
 CAController.prototype.setup = function () {
+  this.naughto();
+  this.setupGame();
+  this.setupDisplay();
+};
+
+CAController.prototype.setupGame = function () {
   var torus  = $('#torus').is(':checked'),
       rows   = parseInt($('#rows').val()),
       cols   = parseInt($('#cols').val()),
-      scale  = parseFloat($('#scale').val()),
-      rules  = RULES[$('#rules').val()],
-      colors = [[0, 0, 0],[0, 0, 255]];
+      rules  = RULES[$('#rules').val()];
+
+  this.game = new CA(rows, cols, rules, torus);
+};
+
+CAController.prototype.setupDisplay = function () {
+  var scale    = parseFloat($('#scale').val()),
+      colors   = [[0, 0, 0],[0, 0, 255]],
+      hardware = $('#hardware').is(':checked'),
+      canvas   = $('#canvas').get(0);
 
   if (rules === RULES.briansBrain) {
     colors.push([255, 255, 255]);
   }
 
-  this.game = new CA(rows, cols, rules, torus);
-  this.view = new CACanvasView(rows, cols, scale, colors, $('#canvas').get(0));
-  this.naughto();
+  this.view = new CACanvasView(this.game, scale, colors, hardware, canvas);
   this.view.updateDisplay(this.game);
 };
 
