@@ -32,6 +32,10 @@ CAController.prototype.wireControls = function () {
     this.setup();
     $('#go').text('Go');
   }.bind(this));
+
+  $('#input').click(function () {
+    this.gameInput($('#game_input').val());
+  }.bind(this));
 };
 
 CAController.prototype.setup = function () {
@@ -84,9 +88,8 @@ CAController.prototype.naughto = function () {
   this.timer = null;
 };
 
-CAController.prototype.gameInput = function () {
+CAController.prototype.gameInput = function (board) {
   this.clear();
-  var board = document.getElementById("game_input").value;
   parseGame(board, this.game);
   this.view.updateDisplay(this.game);
 };
