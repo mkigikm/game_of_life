@@ -1,88 +1,11 @@
-html, head, body, header,
-nav, h1, a, ul, li, main,
-section, p, footer, small {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  outline: 0;
-  font: inherit;
-  color: inherit;
-  text-align: inherit;
-  text-decoration: inherit;
-  vertical-align: inherit;
-  box-sizing: inherit;
-  background: transparent;
-}
-
-header, nav, main, section,
-footer, small {
-  display: block;
-}
-
-ul {
-  list-style: none;
-}
-
-/* Clearfix */
-
-.group:after {
-  content: "";
-  display: block;
-  clear: both;
-}
-
-main {
-  margin: 0 auto;
-  display: block;
-  width: 650px;
-}
-
-div {
-  float: left;
-  width:  1px;
-  height: 1px;
-}
-
-#board {
-  width:  650px;
-  height: 910px;
-}
-
-.sidebar {
+.controls {
   float: left;
 }
 
-footer {
-  display: block;
-  margin: 0 auto;
-  width: 700px;
-}
-
-footer li {
-  float: left;
-  margin: 0 auto;
-}
-
-footer ul {
+.input {
   float: left;
 }
 
-.unvisited {
-  background: black;
-}
-
-.dead {
-  background: black;
-}
-
-.dying {
-  background: blue;
-}
-
-.alive {
-  background: red;
-}
-
-.cond {
-  background: yellow;
+.board {
+  float: left;
 }

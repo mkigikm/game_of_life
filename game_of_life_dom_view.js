@@ -1,4 +1,4 @@
-function GameOfLifeView (controller, parent, rows, cols) {
+function GameOfLifeDomView (controller, parent, rows, cols) {
   this.rows = rows;
   this.cols = cols;
   this.cells = new Array(rows);
@@ -12,7 +12,7 @@ function GameOfLifeView (controller, parent, rows, cols) {
   }
 }
 
-GameOfLifeView.prototype.updateDisplay = function (game) {
+GameOfLifeDomView.prototype.updateDisplay = function (game) {
   for (var i = 0; i < this.rows; i++) {
     for (var j = 0; j < this.cols; j++) {
       this.cells[i][j].updateDisplay(game.getCellState(i, j));
@@ -20,7 +20,7 @@ GameOfLifeView.prototype.updateDisplay = function (game) {
   }
 };
 
-GameOfLifeView.prototype.resetDisplay = function () {
+GameOfLifeDomView.prototype.resetDisplay = function () {
   for (var i = 0; i < this.rows; i++) {
     for (var j = 0; j < this.cols; j++) {
       this.cells[i][j].resetDisplay();
