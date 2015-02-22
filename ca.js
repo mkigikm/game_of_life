@@ -17,8 +17,7 @@ function CA (rows, cols, rule, torus) {
 CA.prototype.randomize = function (p) {
   for (var i = 0; i < this.rows; i++) {
     for (var j = 0; j < this.cols; j++) {
-      p > Math.random() ? this.setCellState(i, j, 1) :
-        this.setCellState(i, j, 0);
+      this.setCellState(i, j, this.rule.randomize(p));
     }
   }
 };

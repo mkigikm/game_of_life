@@ -39,11 +39,15 @@ CAController.prototype.setup = function () {
       rows   = parseInt($('#rows').val()),
       cols   = parseInt($('#cols').val()),
       pixels = parseInt($('#pixels').val()),
-      rules  = RULES[$('#rules').val()];
+      rules  = RULES[$('#rules').val()],
+      colors = [[0, 0, 0],[0, 0, 255]];
+
+  if (rules === RULES.briansBrain) {
+    colors.push([255, 255, 255]);
+  }
 
   this.game = new CA(rows, cols, rules, torus);
-  this.view = new CACanvasView(rows, cols, pixels, [[0, 0, 0],[255, 255, 0]],
-    $('#canvas').get(0));
+  this.view = new CACanvasView(rows, cols, pixels, colors, $('#canvas').get(0));
   this.naughto();
   this.view.updateDisplay(this.game);
 };

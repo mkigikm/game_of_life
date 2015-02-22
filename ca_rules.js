@@ -17,6 +17,10 @@ GoLClass.prototype.deadRule = function (aliveCount) {
   return this.birthRule.indexOf(aliveCount) === -1 ? 0 : 1;
 };
 
+GoLClass.prototype.randomize = function (p) {
+  return p > Math.random() ? 1 : 0;
+}
+
 function BriansBrainRules () {
   this.states = 3;
 };
@@ -35,6 +39,10 @@ BriansBrainRules.prototype.transition = function (state, count) {
     case BriansBrainRules.ALIVE:
       return BriansBrainRules.DYING;
   }
+};
+
+BriansBrainRules.prototype.randomize = function (p) {
+  return p > Math.random() ? 2 : 0;
 };
 
 function WireWorld () {
