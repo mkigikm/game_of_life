@@ -32,12 +32,21 @@ CACanvasView.prototype.resetDisplay = function () {
 };
 
 CACanvasView.prototype.updateDisplay = function (ca) {
-  var buffer = this.ctx.createImageData(this.cols, this.rows),
-      x, y, state, index;
+  var buffer, x, y, state, index;
+
+  if (this.hardware) {
+    buffer = this.ctx.createImageData(this.cols, this.rows);
+  } else {
+    buffer = this.ctx.createImageData(this.canvas.width, this.canvas.height);
+  }
 
   for (x = 0; x < buffer.width; x++) {
     for (y = 0; y < buffer.height; y++) {
-      state = ca.getCellState(y, x);
+      if (this.hardware) {
+        state = ca.getCellState(y, x);
+      } else {
+        state = ca.getCellState(y / this.scale | 0, x / this.scale | 0);
+      }
       index = (y * buffer.width + x) * 4;
       buffer.data[index]     = this.colors[state][0];
       buffer.data[index + 1] = this.colors[state][1];
