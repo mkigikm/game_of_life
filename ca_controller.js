@@ -28,9 +28,13 @@ CAController.prototype.wireControls = function () {
     $('#go').text('Go');
   }.bind(this));
 
-  $('#refresh').click(function () {
+  $('#refreshGame').click(function () {
     this.setup();
     $('#go').text('Go');
+  }.bind(this));
+
+  $('refreshDisplay').click(function () {
+    this.setupDisplay();
   }.bind(this));
 
   $('#input').click(function () {
@@ -42,7 +46,7 @@ CAController.prototype.setup = function () {
   var torus  = $('#torus').is(':checked'),
       rows   = parseInt($('#rows').val()),
       cols   = parseInt($('#cols').val()),
-      pixels = parseInt($('#pixels').val()),
+      scale  = parseFloat($('#scale').val()),
       rules  = RULES[$('#rules').val()],
       colors = [[0, 0, 0],[0, 0, 255]];
 
@@ -51,7 +55,7 @@ CAController.prototype.setup = function () {
   }
 
   this.game = new CA(rows, cols, rules, torus);
-  this.view = new CACanvasView(rows, cols, pixels, colors, $('#canvas').get(0));
+  this.view = new CACanvasView(rows, cols, scale, colors, $('#canvas').get(0));
   this.naughto();
   this.view.updateDisplay(this.game);
 };

@@ -1,13 +1,15 @@
-function CACanvasView (rows, cols, cellWidth, colors, canvas) {
-  this.rows      = rows;
-  this.cols      = cols;
-  this.cellWidth = cellWidth;
-  this.colors    = colors;
-  this.canvas    = canvas;
-  this.ctx       = canvas.getContext('2d');
+function CACanvasView (rows, cols, scale, colors, canvas) {
+  this.rows   = rows;
+  this.cols   = cols;
+  this.scale  = scale;
+  this.colors = colors;
+  this.canvas = canvas;
+  this.ctx    = canvas.getContext('2d');
 
-  canvas.height = cellWidth * rows;
-  canvas.width  = cellWidth * cols;
+  canvas.width        = cols;
+  canvas.height       = rows;
+  canvas.style.width  = scale * cols + 'px';
+  canvas.style.height = scale * rows + 'px';
 };
 
 CACanvasView.prototype.resetDisplay = function () {
@@ -15,12 +17,12 @@ CACanvasView.prototype.resetDisplay = function () {
 };
 
 CACanvasView.prototype.updateDisplay = function (ca) {
-  var buffer = this.ctx.createImageData(this.canvas.width, this.canvas.height),
+  var buffer = this.ctx.createImageData(this.cols, this.rows),
       x, y, state, index;
 
   for (x = 0; x < buffer.width; x++) {
     for (y = 0; y < buffer.height; y++) {
-      state = ca.getCellState(y / this.cellWidth | 0, x / this.cellWidth | 0);
+      state = ca.getCellState(y, x);
       index = (y * buffer.width + x) * 4;
       buffer.data[index]     = this.colors[state][0];
       buffer.data[index + 1] = this.colors[state][1];
