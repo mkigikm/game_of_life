@@ -32,26 +32,45 @@ CACanvasView.prototype.resetDisplay = function () {
 };
 
 CACanvasView.prototype.updateDisplay = function (ca) {
-  var buffer, x, y, state, index;
-
   if (this.hardware) {
-    buffer = this.ctx.createImageData(this.cols, this.rows);
+    this.updateDisplayHardware(ca);
   } else {
-    buffer = this.ctx.createImageData(this.canvas.width, this.canvas.height);
+    this.updateDisplaySoftware(ca);
   }
+};
+
+CACanvasView.prototype.updateDisplaySoftware = function (ca) {
+  var buffer, x, y, state;
+
+  buffer = this.ctx.createImageData(this.canvas.width, this.canvas.height);
 
   for (x = 0; x < buffer.width; x++) {
     for (y = 0; y < buffer.height; y++) {
-      if (this.hardware) {
-        state = ca.getCellState(y, x);
-      } else {
-        state = ca.getCellState(y / this.scale | 0, x / this.scale | 0);
-      }
-      index = (y * buffer.width + x) * 4;
-      buffer.data[index]     = this.colors[state][0];
-      buffer.data[index + 1] = this.colors[state][1];
-      buffer.data[index + 2] = this.colors[state][2];
-      buffer.data[index + 3] = 255;
+      state = ca.getCellState(y / this.scale | 0, x / this.scale | 0);
+      this.setBufferColor(buffer, x, y, state);
+    }
+  }
+
+  this.ctx.putImageData(buffer, 0, 0);
+};
+
+CACanvasView.prototype.setBufferColor = function (buffer, x, y, state) {
+  var index = (y * buffer.width + x) * 4;
+
+  buffer.data[index]     = this.colors[state][0];
+  buffer.data[index + 1] = this.colors[state][1];
+  buffer.data[index + 2] = this.colors[state][2];
+  buffer.data[index + 3] = 255;
+}
+
+CACanvasView.prototype.updateDisplayHardware = function (ca) {
+  var buffer, x, y;
+
+  buffer = this.ctx.createImageData(this.cols, this.rows);
+
+  for (x = 0; x < buffer.width; x++) {
+    for (y = 0; y < buffer.height; y++) {
+      this.setBufferColor(buffer, x, y, ca.getCellState(y, x));
     }
   }
 

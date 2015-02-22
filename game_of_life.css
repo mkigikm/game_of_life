@@ -2,10 +2,37 @@
   float: left;
 }
 
+.controls ul {
+  list-style-type: none;
+}
+
 .input {
-  float: left;
+  float: right;
+}
+
+.input * {
+  display: block;
 }
 
 .board {
-  float: left;
+  /*float:  left;*/
+  /*padding: 0 10px;*/
+}
+
+h2 {
+  font-size: 16px;
+}
+
+header {
+  margin: 0 auto;
+  /*width: 1200px;*/
+}
+
+header h1 {
+  text-align: center;
+}
+
+main {
+  width: 1200px;
+  margin: 0 auto;
 }

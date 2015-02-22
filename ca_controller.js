@@ -64,7 +64,8 @@ CAController.prototype.setupDisplay = function () {
       hardware = $('#hardware').is(':checked'),
       canvas   = $('#canvas').get(0);
 
-  if (rules === RULES.briansBrain) {
+  if (this.game.rule === RULES.briansBrain) {
+    console.log('adding colors')
     colors.push([255, 255, 255]);
   }
 
